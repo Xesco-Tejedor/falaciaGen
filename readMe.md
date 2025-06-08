@@ -13,9 +13,7 @@ Benvingut/da a FalàciaGen, una eina web dissenyada per desafiar el teu pensamen
 🚀 Prova'l Ara Online! 🚀
 No cal instal·lar res. Pots començar a explorar el món de la lògica i la retòrica a l'instant.
 Accedeix a la Demo Online Fent [Clic Aquí](https://xesco-tejedor.github.io/falaciaGen/)
-(Nota: Enllaç de mostra. Afegeix aquí l'URL de la teva demo quan estigui disponible.)
 
-[Aquí va una captura de pantalla o un GIF impressionant de l'aplicació en funcionament!]
 ✨ Característiques Principals
 ✨ Interfície Intuïtiva: Introdueix un concepte, ajusta un paràmetre i genera una fal·làcia en segons.
 🧠 Generació de Fal·làcies amb IA: Utilitza models de llenguatge avançats (via OpenRouter.ai) per crear un text fal·laç convincent, el seu nom, la seva variant en llatí i una explicació detallada.
