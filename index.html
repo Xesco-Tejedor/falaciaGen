@@ -5,128 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FalaciaGen - Generador de Falacias</title>
     <link rel="icon" href="assets/pinocchio.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #007bff; /* Azul primario */
-            --secondary-color: #6c757d; /* Gris secundario */
-            --background-color: #f8f9fa;
-            --text-color: #212529;
-            --border-color: #ced4da;
-            --card-bg: #ffffff;
-            --error-color: #dc3545;
-            --success-color: #28a745;
-            --info-color: #17a2b8; /* Color para botones informativos/exportar */
-            --button-hover-primary: #0056b3;
-            --button-hover-success: #218838;
-            --button-hover-error: #c82333;
-            --button-hover-info: #138496;
-            --disabled-color: #adb5bd;
+            --carbon: #161215;
+            --burgundy: #1f1a1d;
+            --amber: #ffb800;
+            --cyan: #65d8e6;
+            --green: #96c98b;
+            --white: #f4eee5;
+            --muted: #c4b9bd;
+            --line: #4b3e45;
+            --error-color: #e06c60;
+            --r-card: 18px;
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            background-color: var(--carbon);
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 184, 0, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 85% 110%, rgba(101, 216, 230, 0.05), transparent);
+            background-attachment: fixed;
+            color: var(--white);
             line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-amber {
+            width: 340px; height: 340px;
+            background: rgba(255, 184, 0, 0.10);
+            top: -80px; left: -80px;
+            animation: drift 14s ease-in-out infinite alternate;
+        }
+        .orb-cyan {
+            width: 280px; height: 280px;
+            background: rgba(101, 216, 230, 0.07);
+            bottom: -60px; right: -60px;
+            animation: drift 18s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes drift {
+            from { transform: translate(0, 0); }
+            to { transform: translate(40px, 30px); }
+        }
+
         .container {
+            position: relative;
+            z-index: 1;
             max-width: 800px;
+            width: 100%;
             margin: 20px auto;
-            background-color: var(--card-bg);
+            background-color: rgba(31, 26, 29, 0.88);
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: var(--r-card);
+            border: 1px solid var(--line);
+            box-shadow: 0 0 45px rgba(255, 184, 0, 0.10), 0 18px 40px rgba(0, 0, 0, 0.45);
+            animation: rise 0.6s ease both;
+        }
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
-            color: var(--primary-color);
+            color: var(--amber);
             text-align: center;
-            margin-bottom: 35px;
-            font-size: 2.2em;
+            margin-bottom: 12px;
+            font-size: 2.3em;
+            text-shadow: 0 0 24px rgba(255, 184, 0, 0.35);
+        }
+
+        .tagline {
+            text-align: center;
+            color: var(--muted);
+            margin-top: 0;
+            margin-bottom: 28px;
         }
 
         h2 {
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
+            color: var(--amber);
+            border-bottom: 1px solid var(--line);
             padding-bottom: 10px;
             margin-top: 30px;
-            margin-bottom: 25px;
-            font-size: 1.6em;
+            margin-bottom: 22px;
+            font-size: 1.35em;
         }
-         h3 { /* Para sub-secciones como Nombre y Explicación */
-            color: var(--secondary-color);
+        h3 {
+            color: var(--muted);
             margin-top: 20px;
             margin-bottom: 8px;
-            font-size: 1.1em;
-            font-weight: bold;
+            font-size: 1.05em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
-        
-        .form-group {
-            margin-bottom: 25px;
+
+        .auto-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 184, 0, 0.07);
+            border: 1px solid rgba(255, 184, 0, 0.35);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.9em;
+            color: var(--white);
+            margin-bottom: 8px;
         }
+        .auto-badge .dot {
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+            flex-shrink: 0;
+            animation: pulse 2.2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.45; }
+        }
+        .auto-badge small { color: var(--muted); display: block; }
+
+        .form-group { margin-bottom: 10px; }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--secondary-color);
-            font-size: 0.95em;
+            font-weight: 500;
+            color: var(--white);
         }
 
-        input[type="text"],
-        input[type="password"] {
+        input[type="text"] {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            padding: 12px 14px;
+            background-color: var(--carbon);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            color: var(--white);
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1rem;
-            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        
-        .api-key-section {
-            margin-bottom: 25px;
-            padding: 20px;
-            background-color: #eef2f7;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.18);
         }
-        .api-key-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .api-key-section input[type="password"] {
-            flex-grow: 1;
-        }
-        .api-key-section button {
-            padding: 10px 15px;
-            font-size: 0.95rem;
-            white-space: nowrap;
-        }
-        #apiKeyStatus {
-            font-size: 0.9em;
-            margin-top: 8px;
-            min-height: 1.2em;
-        }
-         .api-key-section p {
-             font-size: 0.85em;
-             margin-top: 10px;
-             color: var(--secondary-color);
-        }
-         .api-key-section a {
-             color: var(--primary-color);
-             text-decoration: none;
-         }
-         .api-key-section a:hover {
-             text-decoration: underline;
-         }
+        input[type="text"]::placeholder { color: var(--muted); opacity: 0.7; }
 
         .slider-container {
             display: flex;
@@ -137,7 +177,8 @@
             flex-grow: 1;
             cursor: pointer;
             height: 8px;
-            background: #e9ecef;
+            background: var(--carbon);
+            border: 1px solid var(--line);
             border-radius: 5px;
             appearance: none;
             -webkit-appearance: none;
@@ -149,106 +190,108 @@
             -webkit-appearance: none;
             height: 20px;
             width: 20px;
-            background: var(--primary-color);
+            background: var(--amber);
             border-radius: 50%;
             cursor: pointer;
-            margin-top: -6px;
+            margin-top: -7px;
             border: none;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 0 12px rgba(255, 184, 0, 0.55);
         }
         input[type="range"]::-moz-range-thumb {
             height: 20px;
             width: 20px;
-            background: var(--primary-color);
+            background: var(--amber);
             border-radius: 50%;
             border: none;
             cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 0 12px rgba(255, 184, 0, 0.55);
         }
         #rebuscadoSliderValue {
-            font-weight: bold;
-            color: var(--primary-color);
-            background-color: #e9ecef;
-            padding: 5px 10px;
-            border-radius: 4px;
+            font-weight: 700;
+            color: var(--amber);
+            background-color: var(--carbon);
+            border: 1px solid var(--line);
+            padding: 5px 12px;
+            border-radius: 8px;
             font-size: 0.9em;
-            min-width: 40px;
+            min-width: 44px;
             text-align: center;
         }
 
         button {
-            background-color: var(--primary-color);
-            color: white;
+            background-color: var(--amber);
+            color: var(--carbon);
             border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
+            padding: 13px 24px;
+            border-radius: 10px;
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.2s ease, opacity 0.2s ease;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
             margin-right: 10px;
-            margin-top: 10px;
+            margin-top: 14px;
         }
         button:hover:not(:disabled) {
-            background-color: var(--button-hover-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(255, 184, 0, 0.35);
         }
         button:disabled {
-            background-color: var(--disabled-color);
+            background-color: var(--line);
+            color: var(--muted);
             cursor: not-allowed;
             opacity: 0.7;
         }
-        #clearApiKeyBtn { background-color: var(--error-color); }
-        #clearApiKeyBtn:hover:not(:disabled) { background-color: var(--button-hover-error); }
-        #generateButton { background-color: var(--success-color); }
-        #generateButton:hover:not(:disabled) { background-color: var(--button-hover-success); }
+        #generateButton { width: 100%; margin-right: 0; }
         #exportHistoryBtn {
-            background-color: var(--info-color);
-            font-size: 0.9em;
+            background-color: transparent;
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+            font-size: 0.85em;
             padding: 8px 15px;
-            margin-left: 10px; /* Espacio del título */
-            margin-top: 0; /* Ajustar para alinear con título */
+            margin-left: 10px;
+            margin-top: 0;
         }
         #exportHistoryBtn:hover:not(:disabled) {
-            background-color: var(--button-hover-info);
+            box-shadow: 0 4px 18px rgba(101, 216, 230, 0.25);
         }
 
-
-        .output-section {
-            margin-top: 30px;
-        }
-        .fallacy-details-container { 
+        .output-section { margin-top: 34px; }
+        .fallacy-details-container {
             margin-top: 15px;
-            padding: 10px;
-            background-color: #f9f9f9; 
-            border: 1px dashed var(--border-color); 
-            border-radius: 4px;
+            padding: 14px;
+            background-color: rgba(22, 18, 21, 0.6);
+            border: 1px dashed var(--line);
+            border-radius: 12px;
         }
         #fallacyTextOutput, #fallacyNameOutput, #fallacyLatinNameOutput, #fallacyExplanationOutput {
-            background-color: #e9ecef;
+            background-color: var(--carbon);
+            border: 1px solid var(--line);
+            color: var(--white);
             padding: 15px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            min-height: 50px; 
+            border-radius: 10px;
+            min-height: 50px;
             white-space: pre-wrap;
             word-wrap: break-word;
-            margin-bottom: 10px; 
+            margin-bottom: 10px;
         }
-         #fallacyNameOutput, #fallacyLatinNameOutput { font-style: italic; }
-
+        #fallacyTextOutput p, #fallacyNameOutput p, #fallacyLatinNameOutput p, #fallacyExplanationOutput p { margin: 0; }
+        #fallacyNameOutput, #fallacyLatinNameOutput { font-style: italic; }
+        #fallacyTextOutput { border-left: 3px solid var(--amber); }
 
         #loadingIndicator {
             text-align: center;
             padding: 20px;
-            display: none; 
-            font-weight: bold;
-            color: var(--secondary-color);
+            display: none;
+            font-weight: 700;
+            color: var(--muted);
         }
         .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
+            border: 4px solid rgba(255, 255, 255, 0.08);
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border-left-color: var(--primary-color);
+            border-left-color: var(--amber);
             margin: 10px auto;
             animation: spin 1s ease infinite;
         }
@@ -258,108 +301,112 @@
         }
 
         .error-message {
-            color: var(--error-color);
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            padding: 10px;
-            border-radius: 4px;
+            color: #ffb3ad;
+            background-color: rgba(224, 108, 96, 0.12);
+            border: 1px solid rgba(224, 108, 96, 0.5);
+            padding: 12px;
+            border-radius: 10px;
             margin-top: 15px;
         }
-        
+
         .history-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px; /* Espacio antes de las entradas */
-            border-bottom: 2px solid var(--border-color); /* Mover borde del H2 aquí */
-            padding-bottom: 10px; /* Mover padding del H2 aquí */
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 10px;
         }
         .history-header h2 {
-            margin-bottom: 0; /* Quitar margen inferior del H2 */
-            border-bottom: none; /* Quitar borde inferior del H2 */
-            padding-bottom: 0; /* Quitar padding inferior del H2 */
-            margin-top: 0; /* Ajustar si es necesario */
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-top: 0;
         }
 
-        .history-section {
-            margin-top: 40px;
-            padding-top: 0; /* Quitar padding-top, ya lo maneja el history-header */
-            /* border-top: 2px solid var(--border-color); Se mueve a history-header */
-        }
+        .history-section { margin-top: 40px; }
         .history-entry {
-            background-color: #fdfdfd;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            background-color: rgba(22, 18, 21, 0.7);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 18px;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
         }
-        .history-entry .history-meta { /* Para el timestamp y nivel */
-            font-size:0.8em; 
-            color: var(--secondary-color); 
+        .history-entry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 184, 0, 0.10);
+        }
+        .history-entry .history-meta {
+            font-size: 0.8em;
+            color: var(--muted);
             margin-bottom: 8px;
-            padding-bottom: 5px;
-            border-bottom: 1px dotted #eee;
+            padding-bottom: 6px;
+            border-bottom: 1px dotted var(--line);
         }
         .history-entry h4 {
-            color: var(--secondary-color);
-            font-size: 0.95em; 
+            color: var(--muted);
+            font-size: 0.9em;
             margin-top: 12px;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         .history-entry .history-fallacy-text {
-            background-color: #f0f2f5; 
-            padding: 10px;
-            border-radius: 4px;
+            background-color: var(--carbon);
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--amber);
+            padding: 10px 12px;
+            border-radius: 8px;
             margin-bottom: 10px;
             white-space: pre-wrap;
             word-wrap: break-word;
             font-style: italic;
-            border: 1px solid #ddd;
         }
-         .history-entry .history-details p {
+        .history-entry .history-details p {
             font-size: 0.9em;
             margin-bottom: 6px;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
-        .history-entry .history-name, .history-entry .history-latin-name {
-             font-style: italic;
-        }
+        .history-entry .history-name, .history-entry .history-latin-name { font-style: italic; }
         #historyEntriesContainer .no-history {
-            color: var(--secondary-color);
+            color: var(--muted);
             font-style: italic;
         }
 
         footer {
+            position: relative;
+            z-index: 1;
             text-align: center;
             padding: 20px;
             margin-top: auto;
-            font-size: 0.9em;
-            color: var(--secondary-color);
+            font-size: 0.85em;
+            color: var(--muted);
         }
 
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .container { padding: 20px; }
+            h1 { font-size: 1.9em; }
+        }
     </style>
 </head>
 <body>
+    <div class="orb orb-amber"></div>
+    <div class="orb orb-cyan"></div>
+
     <div class="container">
         <h1>🥸 FalaciaGen</h1>
-        <p>Introduce un concepto, ajusta qué tan rebuscada quieres la falacia, y deja que la IA te sorprenda con un falso razonamiento convincente, su nombre y explicación.</p>
+        <p class="tagline">Introduce un concepto, ajusta qué tan rebuscada quieres la falacia, y deja que la IA te sorprenda con un falso razonamiento convincente, su nombre y explicación.</p>
 
-        <div class="api-key-section">
-            <h2>Configuración de API Key</h2>
-            <label for="apiKeyInput">Clave API de OpenRouter:</label>
-            <div class="api-key-input-wrapper">
-                <input type="password" id="apiKeyInput" placeholder="Introduce tu clave API (sk-or-v1-...)">
-                <button id="saveApiKeyBtn">Guardar Clave</button>
-                <button id="clearApiKeyBtn" disabled>Borrar Clave</button>
+        <div class="auto-badge">
+            <span class="dot"></span>
+            <div>
+                Generación automática con IA gratuita (OpenRouter). Sin claves ni configuración.
+                <small>El tema que escribas se envía al proveedor de IA a través de un servidor intermediario; nada se guarda fuera de tu navegador.</small>
             </div>
-            <div id="apiKeyStatus" aria-live="polite">Introduce tu clave para activar la generación. La clave se guarda localmente en tu navegador.</div>
-            <p>
-                Consigue tu clave en <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer">OpenRouter.ai</a>.
-                FalaciaGen necesita una clave válida para generar texto.
-            </p>
         </div>
 
         <section class="input-section">
@@ -377,7 +424,7 @@
                     <span id="rebuscadoSliderValue">50</span>
                 </div>
             </div>
-            
+
             <button id="generateButton" disabled>Generar Falacia con IA</button>
         </section>
 
@@ -393,12 +440,12 @@
             <div id="fallacyDetailsContainer" class="fallacy-details-container" style="display: none;">
                 <h3>Nombre de la Falacia:</h3>
                 <div id="fallacyNameOutput"><p>...</p></div>
-                
-                <div id="fallacyLatinNameSection" style="display: none;"> 
+
+                <div id="fallacyLatinNameSection" style="display: none;">
                     <h3>Nombre en Latín:</h3>
                     <div id="fallacyLatinNameOutput"><p>...</p></div>
                 </div>
-                
+
                 <h3>Explicación:</h3>
                 <div id="fallacyExplanationOutput"><p>...</p></div>
             </div>
@@ -419,7 +466,7 @@
     </div>
 
     <footer>
-        <p>© 2025 FalaciaGen. Creado con fines educativos y de exploración.</p>
+        <p>© 2026 FalaciaGen. Creado con fines educativos y de exploración.</p>
     </footer>
 
 <script>
@@ -429,20 +476,16 @@
         const userInput = document.getElementById('userInput');
         const rebuscadoSlider = document.getElementById('rebuscadoSlider');
         const rebuscadoSliderValueDisplay = document.getElementById('rebuscadoSliderValue');
-        const apiKeyInput = document.getElementById('apiKeyInput');
-        const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
-        const clearApiKeyBtn = document.getElementById('clearApiKeyBtn');
-        const apiKeyStatus = document.getElementById('apiKeyStatus');
         const generateButton = document.getElementById('generateButton');
         const loadingIndicator = document.getElementById('loadingIndicator');
-        
+
         const fallacyTextOutputParagraph = document.getElementById('fallacyTextOutput').querySelector('p');
         const fallacyDetailsContainer = document.getElementById('fallacyDetailsContainer');
         const fallacyNameOutputParagraph = document.getElementById('fallacyNameOutput').querySelector('p');
         const fallacyLatinNameSection = document.getElementById('fallacyLatinNameSection');
         const fallacyLatinNameOutputParagraph = document.getElementById('fallacyLatinNameOutput').querySelector('p');
         const fallacyExplanationOutputParagraph = document.getElementById('fallacyExplanationOutput').querySelector('p');
-        
+
         const apiErrorOutput = document.getElementById('apiErrorOutput');
 
         const historySection = document.getElementById('historySection');
@@ -450,29 +493,24 @@
         const historyEntriesContainer = document.getElementById('historyEntriesContainer');
         const exportHistoryBtn = document.getElementById('exportHistoryBtn');
 
-        const API_KEY_STORAGE_KEY = 'falaciaGenApiKey';
         const HISTORY_STORAGE_KEY = 'falaciaGenHistory';
-        let currentApiKey = null;
         let isGenerating = false;
         let allHistoryData = {};
 
-        function isValidApiKeyFormat(key) {
-            if (!key) return false;
-            return key.startsWith('sk-or-v1-') || key.startsWith('sk-');
-        }
+        const PROXY = "https://gemini-proxy.francesc-adria-perello.workers.dev/";
+        const FREE_MODEL = "google/gemma-4-31b-it:free";
 
         function escapeHtml(unsafe) {
             if (typeof unsafe !== 'string') return '';
             return unsafe
-                 .replace(/&/g, "&")
-                 .replace(/</g, "<")
-                 .replace(/>/g, ">")
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
                  .replace(/"/g, "&quot;")
-                 .replace(/'/g, "'");
+                 .replace(/'/g, "&#039;");
         }
 
         function loadAllHistory() {
-            console.log('[Historial] Intentando cargar historial desde localStorage.');
             const storedHistory = localStorage.getItem(HISTORY_STORAGE_KEY);
             if (storedHistory) {
                 try {
@@ -480,7 +518,7 @@
                 } catch (e) {
                     console.error("[Historial] Error al parsear historial desde localStorage:", e);
                     allHistoryData = {};
-                    localStorage.removeItem(HISTORY_STORAGE_KEY); 
+                    localStorage.removeItem(HISTORY_STORAGE_KEY);
                 }
             } else {
                 allHistoryData = {};
@@ -507,21 +545,21 @@
                 return;
             }
             const normalizedTerm = term.toLowerCase().trim();
-            const entryWithMetadata = { 
-                ...entryData, 
-                timestamp: new Date().toISOString(), 
-                rebuscadoLevel: parseInt(rebuscadoSlider.value) 
+            const entryWithMetadata = {
+                ...entryData,
+                timestamp: new Date().toISOString(),
+                rebuscadoLevel: parseInt(rebuscadoSlider.value)
             };
             if (!allHistoryData[normalizedTerm]) {
                 allHistoryData[normalizedTerm] = [];
             }
-            allHistoryData[normalizedTerm].unshift(entryWithMetadata); 
+            allHistoryData[normalizedTerm].unshift(entryWithMetadata);
             saveAllHistory();
         }
-        
+
         function displayHistoryForTerm(term) {
             const normalizedTerm = term.toLowerCase().trim();
-            historyEntriesContainer.innerHTML = ''; 
+            historyEntriesContainer.innerHTML = '';
 
             if (normalizedTerm && allHistoryData[normalizedTerm] && allHistoryData[normalizedTerm].length > 0) {
                 historyTitle.textContent = `Historial para: "${escapeHtml(term)}"`;
@@ -556,7 +594,7 @@
                 if (normalizedTerm) {
                     historyTitle.textContent = `Historial para: "${escapeHtml(term)}"`;
                     historyEntriesContainer.innerHTML = `<p class="no-history">No hay historial para este término.</p>`;
-                    historySection.style.display = 'block'; 
+                    historySection.style.display = 'block';
                 } else {
                     historySection.style.display = 'none';
                 }
@@ -564,61 +602,8 @@
             updateAllButtonStates();
         }
 
-        function loadApiKey() {
-            console.log('[API Key] Cargando API Key desde localStorage.');
-            const storedKey = localStorage.getItem(API_KEY_STORAGE_KEY);
-            if (storedKey && isValidApiKeyFormat(storedKey)) { 
-                currentApiKey = storedKey;
-                apiKeyInput.value = currentApiKey; 
-                apiKeyStatus.textContent = 'Clave API cargada y activa. Lista para generar.';
-                apiKeyStatus.style.color = 'var(--success-color)';
-            } else {
-                currentApiKey = null; 
-                if (storedKey) { 
-                    localStorage.removeItem(API_KEY_STORAGE_KEY); 
-                }
-                apiKeyStatus.textContent = 'No hay API Key válida. Introduce una para activar la generación.';
-                apiKeyStatus.style.color = 'var(--secondary-color)';
-            }
-            updateAllButtonStates();
-        }
-
-        function saveApiKey() {
-            const keyFromInput = apiKeyInput.value.trim();
-            if (isValidApiKeyFormat(keyFromInput)) {
-                currentApiKey = keyFromInput;
-                localStorage.setItem(API_KEY_STORAGE_KEY, currentApiKey);
-                apiKeyStatus.textContent = '¡Clave API guardada y activa! Lista para generar.';
-                apiKeyStatus.style.color = 'var(--success-color)';
-                apiErrorOutput.style.display = 'none';
-            } else {
-                currentApiKey = null; 
-                apiKeyStatus.textContent = "Formato de clave API inválido. La generación está desactivada hasta que se guarde una clave válida.";
-                apiKeyStatus.style.color = 'var(--error-color)';
-            }
-            updateAllButtonStates();
-        }
-
-        function clearApiKey() {
-            if (confirm('¿Estás seguro de que quieres borrar la clave API guardada?')) {
-                currentApiKey = null;
-                localStorage.removeItem(API_KEY_STORAGE_KEY);
-                apiKeyInput.value = '';
-                apiKeyStatus.textContent = 'Clave API borrada. La generación está desactivada.';
-                apiKeyStatus.style.color = 'var(--secondary-color)';
-                updateAllButtonStates();
-            }
-        }
-
-        function updateApiKeyButtonsState() {
-            const keyIsStoredAndValid = currentApiKey && isValidApiKeyFormat(localStorage.getItem(API_KEY_STORAGE_KEY));
-            clearApiKeyBtn.disabled = !keyIsStoredAndValid || isGenerating;
-            saveApiKeyBtn.disabled = isGenerating || !apiKeyInput.value.trim(); 
-            apiKeyInput.disabled = isGenerating;
-        }
-        
         function updateGenerateButtonState() {
-            const canGenerate = !isGenerating && currentApiKey && isValidApiKeyFormat(currentApiKey) && userInput.value.trim() !== '';
+            const canGenerate = !isGenerating && userInput.value.trim() !== '';
             generateButton.disabled = !canGenerate;
         }
 
@@ -626,20 +611,17 @@
             const term = userInput.value.trim();
             const normalizedTerm = term.toLowerCase();
             const hasHistoryForTerm = term && allHistoryData[normalizedTerm] && allHistoryData[normalizedTerm].length > 0;
-            
             exportHistoryBtn.disabled = isGenerating || !hasHistoryForTerm;
         }
 
         function updateAllButtonStates() {
-            updateApiKeyButtonsState();
             updateGenerateButtonState();
             updateExportButtonState();
         }
-        
+
         function exportHistoryToMarkdown() {
             const term = userInput.value.trim();
             if (!term) {
-                // Esto no debería suceder si el botón está correctamente deshabilitado
                 alert("Por favor, introduce un término para exportar su historial.");
                 return;
             }
@@ -647,7 +629,6 @@
             const historyForTerm = allHistoryData[normalizedTerm];
 
             if (!historyForTerm || historyForTerm.length === 0) {
-                 // Esto no debería suceder si el botón está correctamente deshabilitado
                 alert(`No hay historial para el término "${escapeHtml(term)}" para exportar.`);
                 return;
             }
@@ -656,54 +637,78 @@
 
             historyForTerm.forEach((entry, index) => {
                 const entryDate = new Date(entry.timestamp);
-                const formattedTimestamp = entryDate.toLocaleString('es-ES', { 
-                    day: '2-digit', month: '2-digit', year: 'numeric', 
-                    hour: '2-digit', minute: '2-digit', second: '2-digit' 
+                const formattedTimestamp = entryDate.toLocaleString('es-ES', {
+                    day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit'
                 });
                 const rebuscadoInfo = entry.rebuscadoLevel !== undefined ? ` (Nivel Rebuscamiento: ${entry.rebuscadoLevel})` : '';
 
                 markdownContent += `## Falacia Generada el ${formattedTimestamp}${rebuscadoInfo}\n\n`;
-                // Para el texto de la falacia, reemplazar saltos de línea con salto de línea + '>' para citas multilínea
                 const fallacyTextForMd = entry.texto_falacia.replace(/\n/g, '\n> ');
                 markdownContent += `> ${fallacyTextForMd}\n\n`;
                 markdownContent += `**Nombre de la Falacia:** ${entry.nombre_falacia}\n`;
                 if (entry.nombre_latin_falacia && entry.nombre_latin_falacia.trim() !== '' && entry.nombre_latin_falacia.toLowerCase() !== 'n/a') {
                     markdownContent += `**Nombre en Latín:** ${entry.nombre_latin_falacia}\n`;
                 }
-                markdownContent += `**Explicación:**\n${entry.explicacion_falacia}\n\n`; // Asumimos que la explicación puede ser multilínea
-                
+                markdownContent += `**Explicación:**\n${entry.explicacion_falacia}\n\n`;
+
                 if (index < historyForTerm.length - 1) {
-                    markdownContent += "---\n\n"; // Separador horizontal
+                    markdownContent += "---\n\n";
                 }
             });
 
             const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
-            // Sanitizar nombre de archivo: quitar caracteres no deseados, reemplazar espacios, limitar longitud
             const sanitizedTerm = term.replace(/[^\w\s.-]/gi, '').replace(/\s+/g, '_').substring(0, 50) || "export";
             const filename = `FalaciaGen_Historial_${sanitizedTerm}.md`;
-            
+
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = filename;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            URL.revokeObjectURL(link.href); // Liberar memoria
+            URL.revokeObjectURL(link.href);
         }
 
+        async function generarConIA(systemText, userText) {
+            const body = {
+                systemInstruction: { parts: [{ text: systemText }] },
+                contents: [{ role: 'user', parts: [{ text: userText }] }],
+                generationConfig: { temperature: 0.75, responseMimeType: 'application/json' },
+                freeModel: FREE_MODEL
+            };
+            let lastError;
+            for (const provider of ['openrouter', 'gemini']) {
+                const ctrl = new AbortController();
+                const timer = setTimeout(() => ctrl.abort(), 120000);
+                try {
+                    const response = await fetch(PROXY + (provider === 'openrouter' ? 'openrouter' : ''), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body),
+                        signal: ctrl.signal
+                    });
+                    const data = await response.json();
+                    if (!response.ok || data.error) {
+                        if (response.status === 429) throw new Error('Cuota gratuita agotada o servicio saturado. Inténtalo más tarde.');
+                        throw new Error('El proveedor de IA no está disponible (HTTP ' + response.status + ').');
+                    }
+                    const text = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('').trim();
+                    if (!text) throw new Error('La IA devolvió una respuesta vacía.');
+                    return text;
+                } catch (error) {
+                    lastError = error.name === 'AbortError' ? new Error('La IA ha tardado demasiado. Inténtalo de nuevo.') : error;
+                } finally {
+                    clearTimeout(timer);
+                }
+            }
+            throw lastError || new Error('No se pudo contactar con la IA.');
+        }
 
-        saveApiKeyBtn.addEventListener('click', saveApiKey);
-        clearApiKeyBtn.addEventListener('click', clearApiKey);
         exportHistoryBtn.addEventListener('click', exportHistoryToMarkdown);
-        
-        apiKeyInput.addEventListener('input', () => {
-            // Solo actualiza el estado del botón de guardar, el resto se actualiza al guardar.
-            saveApiKeyBtn.disabled = isGenerating || !apiKeyInput.value.trim();
-        });
 
         userInput.addEventListener('input', () => {
             displayHistoryForTerm(userInput.value.trim());
-            // displayHistoryForTerm llama a updateAllButtonStates al final
         });
 
         rebuscadoSlider.addEventListener('input', () => {
@@ -712,16 +717,10 @@
 
         generateButton.addEventListener('click', async () => {
             const userText = userInput.value.trim();
-            const rebuscadoLevel = parseInt(rebuscadoSlider.value); 
-            
+            const rebuscadoLevel = parseInt(rebuscadoSlider.value);
+
             if (!userText) {
-                alert('Por favor, introduce una palabra, concepto o frase.');
                 userInput.focus();
-                return;
-            }
-            if (!currentApiKey || !isValidApiKeyFormat(currentApiKey)) {
-                alert('Por favor, introduce y guarda una API Key válida.');
-                apiKeyInput.focus();
                 return;
             }
 
@@ -738,85 +737,55 @@
                 else if (rebuscadoLevel > 50) complexityDescription = "bastante elaborada y sutil";
                 else if (rebuscadoLevel > 25) complexityDescription = "con cierta elaboración";
 
-                const prompt = `Eres un experto en lógica, retórica y filosofía, especializado en la creación de falacias convincentes.
-Tu tarea es generar una falacia o un falso razonamiento que parezca verdadero, basado en el siguiente tema o concepto proporcionado por el usuario: "${userText}".
-La falacia debe tener un nivel de complejidad y "rebuscamiento" ${complexityDescription} (correspondiente a un nivel de ${rebuscadoLevel} sobre 100).
+                const systemText = `Eres un experto en lógica, retórica y filosofía, especializado en la creación de falacias convincentes.
+Tu tarea es generar una falacia o un falso razonamiento que parezca verdadero, basado en el tema o concepto que te dé el usuario.
 Debe ser persuasiva, ocultando el error lógico de forma inteligente.
-Devuelve tu respuesta ESTRICTAMENTE en el siguiente formato JSON, sin ningún texto adicional antes o después del JSON. Incluye el nombre común de la falacia, su nombre clásico en latín (si lo tiene y es relevante), el texto de la falacia, y su explicación:
+Devuelve tu respuesta ESTRICTAMENTE en el siguiente formato JSON, sin ningún texto adicional antes o después del JSON:
 {
   "nombre_falacia": "El nombre común o técnico de la falacia generada",
   "nombre_latin_falacia": "El nombre clásico de la falacia en latín (o cadena vacía '' o 'N/A')",
   "texto_falacia": "El texto completo del argumento falaz.",
   "explicacion_falacia": "Una breve explicación concisa de por qué es una falacia."
-}
-Genera la falacia para el tema: "${userText}" con complejidad ${complexityDescription}, siguiendo el formato JSON especificado.`;
-                
-                const openRouterApiUrl = 'https://openrouter.ai/api/v1/chat/completions';
-                const modelToUse = 'openai/gpt-3.5-turbo'; 
-                let httpReferer = `${window.location.protocol}//${window.location.hostname || 'localhost'}`;
-                if (!window.location.hostname) httpReferer = "http://localhost-falaciagen"; // Fallback para file://
+}`;
 
-                const requestHeaders = {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${currentApiKey}`,
-                    'HTTP-Referer': httpReferer, 
-                    'X-Title': 'FalaciaGen' 
-                };
-                const requestBody = { model: modelToUse, messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 600 }; // Aumentado max_tokens un poco
+                const userPrompt = `Genera una falacia para el tema: "${userText}". La falacia debe tener un nivel de complejidad y "rebuscamiento" ${complexityDescription} (correspondiente a un nivel de ${rebuscadoLevel} sobre 100). Sigue el formato JSON especificado.`;
 
-                const response = await fetch(openRouterApiUrl, { method: 'POST', headers: requestHeaders, body: JSON.stringify(requestBody) });
+                const rawContent = await generarConIA(systemText, userPrompt);
 
-                if (!response.ok) {
-                    let errorData;
-                    try { errorData = await response.json(); } 
-                    catch (e) { const errorText = await response.text(); errorData = { message: `Error HTTP ${response.status}: ${response.statusText}. Respuesta no JSON: ${errorText}` }; }
-                    let errorMessage = `Error de la API: ${response.status} ${response.statusText}`;
-                    if (errorData && errorData.error && errorData.error.message) errorMessage += ` - ${errorData.error.message}`;
-                    else if (errorData && typeof errorData.detail === 'string') errorMessage += ` - ${errorData.detail}`;
-                    else if (errorData && Array.isArray(errorData.detail) && errorData.detail[0] && errorData.detail[0].msg) errorMessage += ` - ${errorData.detail.map(d => d.msg).join('; ')}`;
-                    else if (errorData && errorData.message) errorMessage += ` - ${errorData.message}`;
-                    throw new Error(errorMessage);
+                try {
+                    const cleanedContent = rawContent.replace(/^```json\s*|```\s*$/g, '').trim();
+                    const parsedResponse = JSON.parse(cleanedContent);
+                    if (parsedResponse.texto_falacia && parsedResponse.nombre_falacia && parsedResponse.explicacion_falacia) {
+                        fallacyTextOutputParagraph.textContent = parsedResponse.texto_falacia;
+                        fallacyNameOutputParagraph.textContent = parsedResponse.nombre_falacia;
+                        fallacyExplanationOutputParagraph.textContent = parsedResponse.explicacion_falacia;
+                        if (parsedResponse.nombre_latin_falacia && parsedResponse.nombre_latin_falacia.trim() !== '' && parsedResponse.nombre_latin_falacia.toLowerCase() !== 'n/a') {
+                            fallacyLatinNameOutputParagraph.textContent = parsedResponse.nombre_latin_falacia;
+                            fallacyLatinNameSection.style.display = 'block';
+                        } else {
+                            fallacyLatinNameOutputParagraph.textContent = 'No disponible';
+                            fallacyLatinNameSection.style.display = 'none';
+                            parsedResponse.nombre_latin_falacia = '';
+                        }
+                        fallacyDetailsContainer.style.display = 'block';
+                        addEntryToHistory(userText, parsedResponse);
+                        displayHistoryForTerm(userText);
+                    } else { throw new Error("Campos esperados no encontrados en JSON de IA."); }
+                } catch (jsonError) {
+                    fallacyTextOutputParagraph.textContent = rawContent;
+                    apiErrorOutput.textContent = `Error procesando respuesta de IA: ${jsonError.message}. Se muestra contenido crudo.`;
+                    apiErrorOutput.style.display = 'block';
+                    fallacyNameOutputParagraph.textContent = "...";
+                    fallacyLatinNameOutputParagraph.textContent = "...";
+                    fallacyLatinNameSection.style.display = 'none';
+                    fallacyExplanationOutputParagraph.textContent = "...";
+                    fallacyDetailsContainer.style.display = 'none';
+                    console.error("Error parseando JSON de IA o JSON incompleto:", jsonError, "Contenido crudo:", rawContent);
                 }
-
-                const data = await response.json();
-                
-                if (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content) {
-                    const rawContent = data.choices[0].message.content.trim();
-                    try {
-                        const cleanedContent = rawContent.replace(/^```json\s*|```\s*$/g, '');
-                        const parsedResponse = JSON.parse(cleanedContent);
-                        if (parsedResponse.texto_falacia && parsedResponse.nombre_falacia && parsedResponse.explicacion_falacia) {
-                            fallacyTextOutputParagraph.textContent = parsedResponse.texto_falacia;
-                            fallacyNameOutputParagraph.textContent = parsedResponse.nombre_falacia;
-                            fallacyExplanationOutputParagraph.textContent = parsedResponse.explicacion_falacia;
-                            if (parsedResponse.nombre_latin_falacia && parsedResponse.nombre_latin_falacia.trim() !== '' && parsedResponse.nombre_latin_falacia.toLowerCase() !== 'n/a') {
-                                fallacyLatinNameOutputParagraph.textContent = parsedResponse.nombre_latin_falacia;
-                                fallacyLatinNameSection.style.display = 'block';
-                            } else {
-                                fallacyLatinNameOutputParagraph.textContent = 'No disponible';
-                                fallacyLatinNameSection.style.display = 'none';
-                                parsedResponse.nombre_latin_falacia = ''; 
-                            }
-                            fallacyDetailsContainer.style.display = 'block';
-                            addEntryToHistory(userText, parsedResponse);
-                            displayHistoryForTerm(userText); // Esto también llama a updateAllButtonStates
-                        } else { throw new Error("Campos esperados no encontrados en JSON de IA."); }
-                    } catch (jsonError) {
-                        fallacyTextOutputParagraph.textContent = rawContent; 
-                        apiErrorOutput.textContent = `Error procesando respuesta de IA: ${jsonError.message}. Se muestra contenido crudo. Revisa la consola (F12).`;
-                        apiErrorOutput.style.display = 'block';
-                        fallacyNameOutputParagraph.textContent = "...";
-                        fallacyLatinNameOutputParagraph.textContent = "...";
-                        fallacyLatinNameSection.style.display = 'none';
-                        fallacyExplanationOutputParagraph.textContent = "...";
-                        fallacyDetailsContainer.style.display = 'none';
-                        console.error("Error parseando JSON de IA o JSON incompleto:", jsonError, "Contenido crudo:", rawContent);
-                    }
-                } else { throw new Error("Respuesta de IA no tuvo el formato esperado (sin choices válidas)."); }
             } catch (error) {
-                apiErrorOutput.textContent = `Error al generar la falacia: ${error.message}. Revisa la consola (F12).`;
+                apiErrorOutput.textContent = `Error al generar la falacia: ${error.message}`;
                 apiErrorOutput.style.display = 'block';
-                fallacyTextOutputParagraph.textContent = 'Error al generar. Intenta de nuevo o revisa tu API Key.';
+                fallacyTextOutputParagraph.textContent = 'No se pudo generar. Inténtalo de nuevo en unos minutos.';
                 fallacyNameOutputParagraph.textContent = "...";
                 fallacyLatinNameOutputParagraph.textContent = "...";
                 fallacyLatinNameSection.style.display = 'none';
@@ -830,15 +799,14 @@ Genera la falacia para el tema: "${userText}" con complejidad ${complexityDescri
             }
         });
 
-        loadApiKey(); 
         loadAllHistory();
         const initialTerm = userInput.value.trim();
-        if (initialTerm) displayHistoryForTerm(initialTerm); // Esto llama a updateAllButtonStates
+        if (initialTerm) displayHistoryForTerm(initialTerm);
         else {
             historySection.style.display = 'none';
-            updateAllButtonStates(); // Asegurar estado inicial correcto de botones
+            updateAllButtonStates();
         }
-        console.log('[Inicialización] Aplicación inicializada. currentApiKey:', currentApiKey);
+        console.log('[Inicialización] Aplicación inicializada.');
     });
 </script>
 
