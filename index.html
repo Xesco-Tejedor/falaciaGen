@@ -670,6 +670,28 @@
             URL.revokeObjectURL(link.href);
         }
 
+        function normalizarFallacia(obj) {
+            if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return null;
+            const norm = {};
+            for (const [k, v] of Object.entries(obj)) {
+                if (typeof v !== 'string') continue;
+                const key = k.toLowerCase().trim();
+                if (key === '' || key === 'nombre_falacia' || key === 'nombre') {
+                    if (!norm.nombre_falacia) norm.nombre_falacia = v;
+                } else if (key.includes('latin')) {
+                    norm.nombre_latin_falacia = v;
+                } else if (key.includes('texto')) {
+                    norm.texto_falacia = v;
+                } else if (key.includes('explicacion') || key.includes('explicación')) {
+                    norm.explicacion_falacia = v;
+                } else if (key.includes('nombre') && !norm.nombre_falacia) {
+                    norm.nombre_falacia = v;
+                }
+            }
+            if (norm.texto_falacia && norm.nombre_falacia && norm.explicacion_falacia) return norm;
+            return null;
+        }
+
         async function generarConIA(systemText, userText) {
             const body = {
                 systemInstruction: { parts: [{ text: systemText }] },
@@ -740,7 +762,7 @@
                 const systemText = `Eres un experto en lógica, retórica y filosofía, especializado en la creación de falacias convincentes.
 Tu tarea es generar una falacia o un falso razonamiento que parezca verdadero, basado en el tema o concepto que te dé el usuario.
 Debe ser persuasiva, ocultando el error lógico de forma inteligente.
-Devuelve tu respuesta ESTRICTAMENTE en el siguiente formato JSON, sin ningún texto adicional antes o después del JSON:
+Devuelve tu respuesta ESTRICTAMENTE en el siguiente formato JSON, sin ningún texto adicional antes o después del JSON. Es crítico que las claves sean exactamente estas cuatro: nombre_falacia, nombre_latin_falacia, texto_falacia, explicacion_falacia.
 {
   "nombre_falacia": "El nombre común o técnico de la falacia generada",
   "nombre_latin_falacia": "El nombre clásico de la falacia en latín (o cadena vacía '' o 'N/A')",
@@ -750,12 +772,21 @@ Devuelve tu respuesta ESTRICTAMENTE en el siguiente formato JSON, sin ningún te
 
                 const userPrompt = `Genera una falacia para el tema: "${userText}". La falacia debe tener un nivel de complejidad y "rebuscamiento" ${complexityDescription} (correspondiente a un nivel de ${rebuscadoLevel} sobre 100). Sigue el formato JSON especificado.`;
 
-                const rawContent = await generarConIA(systemText, userPrompt);
+                let parsedResponse = null;
+                let lastRawContent = '';
+                for (let intento = 0; intento < 2 && !parsedResponse; intento++) {
+                    lastRawContent = await generarConIA(systemText, userPrompt);
+                    try {
+                        const cleanedContent = lastRawContent.replace(/^```json\s*|```\s*$/g, '').trim();
+                        parsedResponse = normalizarFallacia(JSON.parse(cleanedContent));
+                    } catch (parseError) {
+                        console.error('JSON inválido en intento', intento + 1, parseError);
+                    }
+                }
 
                 try {
-                    const cleanedContent = rawContent.replace(/^```json\s*|```\s*$/g, '').trim();
-                    const parsedResponse = JSON.parse(cleanedContent);
-                    if (parsedResponse.texto_falacia && parsedResponse.nombre_falacia && parsedResponse.explicacion_falacia) {
+                    const rawContent = lastRawContent;
+                    if (parsedResponse) {
                         fallacyTextOutputParagraph.textContent = parsedResponse.texto_falacia;
                         fallacyNameOutputParagraph.textContent = parsedResponse.nombre_falacia;
                         fallacyExplanationOutputParagraph.textContent = parsedResponse.explicacion_falacia;
