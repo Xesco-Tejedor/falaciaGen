@@ -777,15 +777,17 @@ Devuelve tu respuesta ESTRICTAMENTE en el siguiente formato JSON, sin ningún te
                 for (let intento = 0; intento < 2 && !parsedResponse; intento++) {
                     lastRawContent = await generarConIA(systemText, userPrompt);
                     try {
-                        const cleanedContent = lastRawContent.replace(/^```json\s*|```\s*$/g, '').trim();
+                        let cleanedContent = lastRawContent.replace(/^```json\s*|```\s*$/g, '').trim();
+                        const jsonMatch = cleanedContent.match(/\{[\s\S]*\}/);
+                        if (jsonMatch) cleanedContent = jsonMatch[0];
                         parsedResponse = normalizarFallacia(JSON.parse(cleanedContent));
                     } catch (parseError) {
                         console.error('JSON inválido en intento', intento + 1, parseError);
                     }
                 }
 
+                const rawContent = lastRawContent;
                 try {
-                    const rawContent = lastRawContent;
                     if (parsedResponse) {
                         fallacyTextOutputParagraph.textContent = parsedResponse.texto_falacia;
                         fallacyNameOutputParagraph.textContent = parsedResponse.nombre_falacia;
